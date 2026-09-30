@@ -15,14 +15,14 @@ export default function Login({ personas }: { personas: P[] }) {
   }
   return (
     <section className="personas">
-      <div className="label">Sign in as a synthetic customer</div>
+      <div className="label">Open a mirror as</div>
       <div className="grid">
         {personas.map((p) => (
           <button key={p.id} className="persona" onClick={() => pick(p.id)} disabled={busy !== null}>
-            <span className="avatar">{p.name.split(" ").map((s) => s[0]).join("")}</span>
+            <img className="avatar" src={`/avatars/${p.id}.jpg`} alt="" width={44} height={44} />
             <span className="pname">{p.name}, {p.age}</span>
             <span className="pseg">{p.segment}</span>
-            <span className="cta">{busy === p.id ? "Opening" : "Open my mirror"}</span>
+            <span className="cta">{busy === p.id ? "Opening" : "Open my mirror"} <span aria-hidden="true">→</span></span>
           </button>
         ))}
       </div>

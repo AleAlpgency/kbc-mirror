@@ -44,8 +44,8 @@ export default function Mirror() {
   return (
     <main className="wrap">
       <header className="bar">
-        <div className="brand">KBC <span>Mirror</span></div>
-        <div className="who">{ledger.customer.name} · {ledger.customer.segment} <button className="link" onClick={logout}>Sign out</button></div>
+        <a className="brand" href="/"><img src="/brand/kbc-white.svg" alt="KBC" height={26} /><span>Mirror</span></a>
+        <div className="who"><img className="who-avatar" src={`/avatars/${ledger.customer.id}.jpg`} alt="" width={28} height={28} />{ledger.customer.name} · {ledger.customer.segment} <button className="link" onClick={logout}>Sign out</button></div>
       </header>
 
       <section>
