@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <main className="wrap home">
       <header className="bar home-bar">
-        <a className="brand" href="/"><img src="/brand/kbc-white.svg" alt="KBC" height={30} /><span>Mirror</span></a>
+        <a className="brand" href="/"><img src="/brand/kbc.svg" alt="KBC" height={30} /><span>Mirror</span></a>
         <span className="pill">Proof of concept · Tectonic Hackathon 2026</span>
       </header>
 

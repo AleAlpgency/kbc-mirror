@@ -6,7 +6,9 @@ export const notFound = () => NextResponse.json({ error: "Not found" }, { status
 export const tooMany = () => NextResponse.json({ error: "Too many requests" }, { status: 429 });
 
 // ponytail: in-memory per-IP limiter, fine for one process; move to a shared store behind a load balancer.
+// x-forwarded-for is only trustworthy behind a proxy that sets it; the map is capped so a spoofer cannot grow memory.
 const hits = new Map<string, number[]>();
+const MAX_KEYS = 10_000;
 const WINDOW_MS = 60_000;
 const LIMIT = 60;
 
@@ -15,6 +17,7 @@ export function rateLimited(req: Request): boolean {
   const now = Date.now();
   const arr = (hits.get(ip) || []).filter((t) => now - t < WINDOW_MS);
   arr.push(now);
+  if (!hits.has(ip) && hits.size >= MAX_KEYS) hits.clear();
   hits.set(ip, arr);
   return arr.length > LIMIT;
 }
@@ -24,8 +27,8 @@ export function badOrigin(req: Request): boolean {
   if (!(req.headers.get("content-type") || "").includes("application/json")) return true;
   const origin = req.headers.get("origin");
   const host = req.headers.get("host");
-  if (!origin || !host) return false; // same-origin fetch without Origin header (non-browser clients) is not a CSRF vector
-  return new URL(origin).host !== host;
+  if (!origin || !host) return true; // browsers always send Origin on POST; anything else is refused
+  try { return new URL(origin).host !== host; } catch { return true; }
 }
 
 export async function readJson(req: Request): Promise<Record<string, unknown> | null> {
